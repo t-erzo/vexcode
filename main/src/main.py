@@ -1,11 +1,11 @@
-# ---------------------------------------------------------------------------- #
-#                                                                              #
-# 	Module:       main.py                                                      #
-# 	Author:       adam                                                         #
-# 	Created:      11/9/2026, 7:09:22 PM                                        #
-# 	Description:  V5 project                                                   #
-#                                                                              #
-# ---------------------------------------------------------------------------- #
+# ---------------------------------------#
+#                                        # 
+# 	Module:       main.py                # 
+# 	Author:       adam                   #
+# 	Created:      11/9/2026, 7:09:22 PM  #                                     
+# 	Description:  V5 project             #
+#                                        #                                     
+# ---------------------------------------#
 
 from vex import *
 brain = Brain()
@@ -17,15 +17,15 @@ update_interval = 20
 
 #motor configuration
 frontLeft = Motor(Ports.PORT20, GearSetting.RATIO_6_1, True)
-frontRight = Motor(Ports.PORT11, GearSetting.RATIO_6_1, False)
+frontRight = Motor(Ports.PORT18, GearSetting.RATIO_6_1, False)
 
 
 backLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
-backRight = Motor(Ports.PORT12, GearSetting.RATIO_6_1, False)
+backRight = Motor(Ports.PORT17, GearSetting.RATIO_6_1, False)
 
 #lift motors
-liftR = Motor(Ports.PORT1, GearSetting.RATIO_18_1, True)
-liftL = Motor(Ports.PORT10, GearSetting.RATIO_18_1, False)
+liftR = Motor(Ports.PORT11, GearSetting.RATIO_18_1, True)
+liftL = Motor(Ports.PORT13, GearSetting.RATIO_18_1, False)
 
 
 #setup stopping modes
