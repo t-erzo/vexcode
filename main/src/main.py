@@ -55,7 +55,7 @@ def toggle_motor_speed():
     global current_index
 
     #list of motor presets - 1st entry is the default
-    motor_presets = [0.5, 0.75, 1]
+    motor_presets = [1, 0.5, 0.75]
 
     #code to detect and set motor speed
     length = len(motor_presets)
@@ -85,6 +85,9 @@ def autonomous():
     # place automonous code here
 
 def user_control():
+    global motor_power
+    global motor_power_old
+
     brain.screen.clear_screen()
     brain.screen.print("driver control")
     while True:
@@ -96,16 +99,13 @@ def user_control():
 
         #poll input from controller
         turn = controller.axis4.position()/2
-        forward = controller.axis3.position()
+        forward = -controller.axis3.position()
         lift_power = controller.axis2.position()
 
         #add turn values together; vex caps at 100%
         left_power = forward + turn
         right_power = forward - turn
             
-        #caps input power
-        if abs(intake_power) >= 100:
-            intake_power = 100 * get_sign(intake_power)
 
         #controls the chain bar power
         if controller.buttonR2.pressing():
