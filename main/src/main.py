@@ -71,7 +71,12 @@ def toggle_motor_speed():
         current_index +=1
     motor_power = motor_presets[current_index]
 
-
+# def drive_for(units, speed reverse=False):
+    
+#     frontLeft.spin_for()
+#     frontRight
+#     backLeft
+#     backRight
 
 
 #variables to keep track of motor speed multiplier
