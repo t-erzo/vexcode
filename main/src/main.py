@@ -16,12 +16,12 @@ update_interval = 20
 
 
 #motor configuration
-frontLeft = Motor(Ports.PORT20, GearSetting.RATIO_6_1, True)
-frontRight = Motor(Ports.PORT18, GearSetting.RATIO_6_1, False)
+frontLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
+frontRight = Motor(Ports.PORT17, GearSetting.RATIO_6_1, False)
 
 
-backLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
-backRight = Motor(Ports.PORT17, GearSetting.RATIO_6_1, False)
+backLeft = Motor(Ports.PORT20, GearSetting.RATIO_6_1, True)
+backRight = Motor(Ports.PORT18, GearSetting.RATIO_6_1, False)
 
 #lift motors
 liftR = Motor(Ports.PORT11, GearSetting.RATIO_18_1, True)
@@ -99,8 +99,8 @@ def user_control():
 
         #poll input from controller
         turn = controller.axis4.position()/2
-        forward = -controller.axis3.position()
-        lift_power = controller.axis2.position()
+        forward = controller.axis3.position()
+        lift_power = controller.axis2.position() * 0.8
 
         #add turn values together; vex caps at 100%
         left_power = forward + turn
