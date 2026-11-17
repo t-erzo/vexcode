@@ -7,9 +7,12 @@
 #                                        #                                     
 # ---------------------------------------#
 
+
+
 from vex import *
 brain = Brain()
 controller = Controller()
+
 
 #tick update time - in ms
 update_interval = 20
@@ -26,6 +29,8 @@ backRight = Motor(Ports.PORT18, GearSetting.RATIO_6_1, False)
 #lift motors
 liftR = Motor(Ports.PORT11, GearSetting.RATIO_18_1, True)
 liftL = Motor(Ports.PORT13, GearSetting.RATIO_18_1, False)
+
+toggle = Motor(Ports.PORTX, GearSetting.RATIO_18_1, False)
 
 
 #setup stopping modes
@@ -68,16 +73,19 @@ def toggle_motor_speed():
 
 
 
+
 #variables to keep track of motor speed multiplier
 current_index = 0
 motor_power = 0
+toggle_power = 80
 
 #initialization to start motor script
 toggle_motor_speed()
 motor_power_old = motor_power
 
 #sets 'a' button to toggle the motor speed function
-controller.buttonA.pressed(toggle_motor_speed)
+controller.buttonX.pressed(toggle_motor_speed)
+
 
 def autonomous():
     brain.screen.clear_screen()
@@ -98,7 +106,7 @@ def user_control():
 
 
         #poll input from controller
-        turn = controller.axis4.position()/2
+        turn = -controller.axis4.position()/2
         forward = controller.axis3.position()
         lift_power = controller.axis2.position() * 0.8
 
@@ -150,6 +158,10 @@ def user_control():
             liftR.stop()
             liftL.stop()
 
+        if controller.buttonB.pressing:
+            toggle.spin(FORWARD, toggle_power, PERCENT)
+        else:
+            toggle.stop()
 
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
