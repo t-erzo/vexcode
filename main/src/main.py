@@ -27,10 +27,11 @@ backLeft = Motor(Ports.PORT20, GearSetting.RATIO_6_1, True)
 backRight = Motor(Ports.PORT18, GearSetting.RATIO_6_1, False)
 
 #lift motors
-liftR = Motor(Ports.PORT11, GearSetting.RATIO_18_1, True)
+liftR = Motor(Ports.PORT14, GearSetting.RATIO_18_1, True)
 liftL = Motor(Ports.PORT13, GearSetting.RATIO_18_1, False)
 
-toggle = Motor(Ports.PORTX, GearSetting.RATIO_18_1, False)
+toggle = Motor(Ports.PORT15, GearSetting.RATIO_18_1, False)
+toggle.set_velocity(100, PERCENT)
 
 
 #setup stopping modes
@@ -52,6 +53,11 @@ def wipe_screen():
 #function to check the sign (0, -1, 1) of a num
 def get_sign(num):
     return (num > 0) - (num < 0)
+
+def activate_toggle():
+    toggle.spin_for(FORWARD, 360, DEGREES, wait=False)
+
+
 
 #function to toggle global drivetrain motor speeds
 def toggle_motor_speed():
@@ -89,7 +95,8 @@ toggle_motor_speed()
 motor_power_old = motor_power
 
 #sets 'a' button to toggle the motor speed function
-controller.buttonX.pressed(toggle_motor_speed)
+controller.buttonA.pressed(toggle_motor_speed)
+controller.buttonB.pressed(activate_toggle)
 
 
 def autonomous():
@@ -112,7 +119,7 @@ def user_control():
 
         #poll input from controller
         turn = -controller.axis4.position()/2
-        forward = controller.axis3.position()
+        forward = -controller.axis3.position()
         lift_power = controller.axis2.position() * 0.8
 
         #add turn values together; vex caps at 100%
@@ -163,10 +170,7 @@ def user_control():
             liftR.stop()
             liftL.stop()
 
-        if controller.buttonB.pressing:
-            toggle.spin(FORWARD, toggle_power, PERCENT)
-        else:
-            toggle.stop()
+
 
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
