@@ -17,6 +17,9 @@ controller = Controller()
 #tick update time - in ms
 update_interval = 20
 
+#PORT 9 is fucked. literally fucked.
+
+
 
 #motor configuration
 frontLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
@@ -34,8 +37,7 @@ toggle = Motor(Ports.PORT15, GearSetting.RATIO_18_1, False)
 toggle.set_velocity(100, PERCENT)
 
 #ports tbd
-claw_motor = Motor(Ports.PORT16, GearSetting.RATIO_18_1, False)
-claw_spinner = Motor(Ports.PORT17, GearSetting.RATIO_18_1, False)
+claw_spinner = Motor(Ports.PORT10, GearSetting.RATIO_18_1, False)
 
 
 #setup stopping modes
@@ -60,11 +62,6 @@ def get_sign(num):
 
 def activate_toggle():
     toggle.spin_for(FORWARD, 300, DEGREES, wait=False)
-
-def toggle_claw():
-    global claw_open
-    value = -180 if not claw_open else 180
-    toggle.spin_for(FORWARD, value, DEGREES, wait=False)
 
 
 
@@ -109,7 +106,6 @@ motor_power_old = motor_power
 controller.buttonA.pressed(toggle_motor_speed)
 
 controller.buttonB.pressed(activate_toggle)
-controller.buttonX.pressed(toggle_claw)
 
 
 def autonomous():
@@ -183,11 +179,12 @@ def user_control():
             liftR.stop()
             liftL.stop()
 
-        if controller.buttonL1.pressing:
+        if controller.buttonL1.pressing():
             claw_spinner.spin(REVERSE, 100, PERCENT)
-        elif controller.buttonR1.pressing:
+        elif controller.buttonR1.pressing():
             claw_spinner.spin(FORWARD, 100, PERCENT)
-
+        else:
+            claw_spinner.stop()
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
         wait(update_interval, MSEC)
