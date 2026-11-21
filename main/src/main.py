@@ -33,6 +33,10 @@ liftL = Motor(Ports.PORT13, GearSetting.RATIO_18_1, False)
 toggle = Motor(Ports.PORT15, GearSetting.RATIO_18_1, False)
 toggle.set_velocity(100, PERCENT)
 
+#ports tbd
+claw_motor = Motor(Ports.PORT16, GearSetting.RATIO_18_1, False)
+claw_spinner = Motor(Ports.PORT17, GearSetting.RATIO_18_1, False)
+
 
 #setup stopping modes
 liftR.set_stopping(HOLD)
@@ -55,7 +59,12 @@ def get_sign(num):
     return (num > 0) - (num < 0)
 
 def activate_toggle():
-    toggle.spin_for(FORWARD, 360, DEGREES, wait=False)
+    toggle.spin_for(FORWARD, 300, DEGREES, wait=False)
+
+def toggle_claw():
+    global claw_open
+    value = -180 if not claw_open else 180
+    toggle.spin_for(FORWARD, value, DEGREES, wait=False)
 
 
 
@@ -90,13 +99,17 @@ current_index = 0
 motor_power = 0
 toggle_power = 80
 
+claw_open = False
+
 #initialization to start motor script
 toggle_motor_speed()
 motor_power_old = motor_power
 
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
+
 controller.buttonB.pressed(activate_toggle)
+controller.buttonX.pressed(toggle_claw)
 
 
 def autonomous():
@@ -170,7 +183,10 @@ def user_control():
             liftR.stop()
             liftL.stop()
 
-
+        if controller.buttonL1.pressing:
+            claw_spinner.spin(REVERSE, 100, PERCENT)
+        elif controller.buttonR1.pressing:
+            claw_spinner.spin(FORWARD, 100, PERCENT)
 
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
