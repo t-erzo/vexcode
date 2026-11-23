@@ -129,7 +129,7 @@ def user_control():
         #poll input from controller
         turn = -controller.axis4.position()/2
         forward = -controller.axis3.position()
-        lift_power = controller.axis2.position() * 0.8
+        lift_power = controller.axis2.position()
 
         #add turn values together; vex caps at 100%
         left_power = forward + turn
