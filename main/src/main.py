@@ -61,7 +61,7 @@ def get_sign(num):
     return (num > 0) - (num < 0)
 
 def activate_toggle():
-    toggle.spin_for(FORWARD, 300, DEGREES, wait=False)
+    toggle.spin_for(REVERSE, 300, DEGREES, wait=False)
 
 
 
@@ -127,7 +127,7 @@ def user_control():
 
 
         #poll input from controller
-        turn = -controller.axis4.position()/2
+        turn = -controller.axis4.position()
         forward = -controller.axis3.position()
         lift_power = controller.axis2.position()
 
