@@ -61,7 +61,7 @@ def get_sign(num):
     return (num > 0) - (num < 0)
 
 def activate_toggle():
-    toggle.spin_for(REVERSE, 300, DEGREES, wait=False)
+    toggle.spin_for(FORWARD, -360, DEGREES, wait=False)
 
 
 
@@ -72,7 +72,7 @@ def toggle_motor_speed():
     global current_index
 
     #list of motor presets - 1st entry is the default
-    motor_presets = [1, 0.5, 0.75]
+    motor_presets = [1.0, 0.5, 0.75]
 
     #code to detect and set motor speed
     length = len(motor_presets)
