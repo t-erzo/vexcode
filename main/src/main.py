@@ -17,9 +17,6 @@ controller = Controller()
 #tick update time - in ms
 update_interval = 20
 
-#PORT 9 is fucked. literally fucked.
-
-
 
 #motor configuration
 frontLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
@@ -170,6 +167,8 @@ def user_control():
 
         #lift
         if lift_power != 0:
+            if left_power < 0:
+                lift_power *=0.6
             liftR.spin(FORWARD, lift_power, PERCENT)
             liftL.spin(FORWARD, lift_power, PERCENT)
         else:
@@ -184,7 +183,9 @@ def user_control():
             claw_spinner.stop()
 
         if controller.buttonB.pressing():
-            toggle.spin(FORWARD, 80, PERCENT)
+            toggle.spin(REVERSE, 80, PERCENT)
+        else:
+            toggle.stop()
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
         wait(update_interval, MSEC)
