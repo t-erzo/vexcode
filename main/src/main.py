@@ -81,25 +81,23 @@ def toggle_motor_speed():
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
 
-def drive_for(turns, speed, pause=False):
-    target = turns * 2560 #found by using existing gear ratio
-    frontLeft.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
-    frontRight.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
-    backLeft.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
-    backRight.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
+def drive_for(turns, speed, blocking=True, pause=False):
+    target = turns * 2520  # found by using existing gear ratio
+    frontLeft.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=False)
+    frontRight.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=False)
+    backLeft.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=False)
+    backRight.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=blocking)
 
-# MOTOR_DEG_PER_ROBOT_DEG = (TRACK_WIDTH / WHEEL_DIAMETER) * DEG_PER_WHEEL_REV / 360.0  # 24.0
-motor_degrees = 24
-
-def turn_for(angle_deg, speed):
-    target = abs(angle_deg) * motor_degrees
+def turn_for(angle_deg, speed, blocking=True):
     left_dir = FORWARD if angle_deg >= 0 else REVERSE
     right_dir = REVERSE if angle_deg >= 0 else FORWARD
+    angle_deg = abs(angle_deg)
+    target = angle_deg * (9945 / 360)
 
     frontLeft.spin_for(left_dir, target, DEGREES, speed, PERCENT, wait=False)
     backLeft.spin_for(left_dir, target, DEGREES, speed, PERCENT, wait=False)
     frontRight.spin_for(right_dir, target, DEGREES, speed, PERCENT, wait=False)
-    backRight.spin_for(right_dir, target, DEGREES, speed, PERCENT, wait=False)
+    backRight.spin_for(right_dir, target, DEGREES, speed, PERCENT, wait=blocking)
 
 
 #variables to keep track of motor speed multiplier
@@ -112,14 +110,29 @@ motor_power_old = motor_power
 #initialization to start motor script
 toggle_motor_speed()
 
-
+def spin_toggle(time, pause=False):
+    toggle.spin_for(REVERSE, time, DEGREES, 70, PERCENT, wait=pause)
+def raise_lift(units, speed, pause=False):
+    liftL.spin_for(FORWARD, units, DEGREES, speed, PERCENT, wait=pause)
+    liftR.spin_for(FORWARD, units, DEGREES, speed, PERCENT, wait=pause)
+def take(time, pause=False):
+    claw_spinner.spin_for(REVERSE, time, DEGREES, 100, PERCENT, wait=pause)
 
 def autonomous():
+    #all functions are non-blocking by default
     brain.screen.clear_screen()
     brain.screen.print("autonomous code")
-    drive_for(1, 20)
-    wait(1, SECONDS)
-    turn_for(360, 20)
+    turn_for(-30, 80, True)
+    drive_for(-0.5, 100, True)
+    spin_toggle(120, True)
+    drive_for(0.2, 50)
+    turn_for(65, 100, True)
+
+    raise_lift(80, 20) 
+    drive_for(1.6, 100, True)
+    raise_lift(-40, 20)
+    take(-360, True) #outtake
+
 
 def user_control():
     global motor_power
