@@ -17,7 +17,7 @@ controller = Controller()
 #tick update time - in ms
 update_interval = 20
 
-
+#!!!!Port 9 NOT WORKING!!!!
 #motor configuration
 frontLeft = Motor(Ports.PORT19, GearSetting.RATIO_6_1, True)
 frontRight = Motor(Ports.PORT17, GearSetting.RATIO_6_1, False)
@@ -78,6 +78,9 @@ def toggle_motor_speed():
         current_index +=1
     motor_power = motor_presets[current_index]
 
+#sets 'a' button to toggle the motor speed function
+controller.buttonA.pressed(toggle_motor_speed)
+
 # def drive_for(units, speed reverse=False):
     
 #     frontLeft.spin_for()
@@ -90,15 +93,11 @@ def toggle_motor_speed():
 current_index = 0
 motor_power = 0
 toggle_power = 80
-
 claw_open = False
+motor_power_old = motor_power
 
 #initialization to start motor script
 toggle_motor_speed()
-motor_power_old = motor_power
-
-#sets 'a' button to toggle the motor speed function
-controller.buttonA.pressed(toggle_motor_speed)
 
 
 
@@ -112,8 +111,9 @@ def user_control():
     global motor_power_old
 
     brain.screen.clear_screen()
-    brain.screen.print("driver control")
+    brain.screen.print("driving :3")
     while True:
+        #prints controller speed
         if motor_power_old != motor_power:
             wipe_screen()
             value = "speed: " + str(motor_power * 100) + "%"
@@ -146,6 +146,20 @@ def user_control():
         else:
             claw_power = 0
 
+        #spins claw open and close on demand
+        if controller.buttonL1.pressing():
+            claw_spinner.spin(REVERSE, 100, PERCENT)
+        elif controller.buttonR1.pressing():
+            claw_spinner.spin(FORWARD, 100, PERCENT)
+        else:
+            claw_spinner.stop()
+
+        #spins toggle on button 'b' pressed
+        if controller.buttonB.pressing():
+            toggle.spin(REVERSE, 80, PERCENT)
+        else:
+            toggle.stop()
+
         #calculates the correct motor speeds for the robot
         left_power = int(left_power * motor_power)
         right_power = int(right_power * motor_power)
@@ -175,17 +189,7 @@ def user_control():
             liftR.stop()
             liftL.stop()
 
-        if controller.buttonL1.pressing():
-            claw_spinner.spin(REVERSE, 100, PERCENT)
-        elif controller.buttonR1.pressing():
-            claw_spinner.spin(FORWARD, 100, PERCENT)
-        else:
-            claw_spinner.stop()
 
-        if controller.buttonB.pressing():
-            toggle.spin(REVERSE, 80, PERCENT)
-        else:
-            toggle.stop()
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
         wait(update_interval, MSEC)
