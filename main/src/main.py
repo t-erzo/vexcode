@@ -81,12 +81,11 @@ def toggle_motor_speed():
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
 
-# def drive_for(units, speed reverse=False):
-    
-#     frontLeft.spin_for()
-#     frontRight
-#     backLeft
-#     backRight
+def drive_for(turns, speed reverse=False):
+    frontLeft.spin_for()
+    frontRight.spin_for()
+    backLeft.spin_for()
+    backRight.spin_for()
 
 
 #variables to keep track of motor speed multiplier
@@ -156,7 +155,7 @@ def user_control():
 
         #spins toggle on button 'b' pressed
         if controller.buttonB.pressing():
-            toggle.spin(REVERSE, 80, PERCENT)
+            toggle.spin(REVERSE, 70, PERCENT)
         else:
             toggle.stop()
 
@@ -182,6 +181,7 @@ def user_control():
         #lift
         if lift_power != 0:
             if left_power < 0:
+                #linearly decelerate when going down to prevent damage
                 lift_power *=0.6
             liftR.spin(FORWARD, lift_power, PERCENT)
             liftL.spin(FORWARD, lift_power, PERCENT)
