@@ -60,8 +60,6 @@ def wipe_screen():
 def get_sign(num):
     return (num > 0) - (num < 0)
 
-def activate_toggle():
-    toggle.spin_for(FORWARD, -360, DEGREES, wait=False)
 
 
 
@@ -105,7 +103,6 @@ motor_power_old = motor_power
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
 
-controller.buttonB.pressed(activate_toggle)
 
 
 def autonomous():
@@ -185,6 +182,9 @@ def user_control():
             claw_spinner.spin(FORWARD, 100, PERCENT)
         else:
             claw_spinner.stop()
+
+        if controller.buttonB.pressing():
+            toggle.spin(FORWARD, 80, PERCENT)
         #keeps old motor speed in memory to determine when to update motor speed and lcd
         motor_power_old = motor_power
         wait(update_interval, MSEC)
