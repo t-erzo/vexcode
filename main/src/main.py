@@ -81,7 +81,7 @@ def toggle_motor_speed():
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
 
-def drive_for(turns, speed, blocking=True, pause=False):
+def drive_for(turns, speed, blocking=True):
     target = turns * 2520  # found by using existing gear ratio
     frontLeft.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=False)
     frontRight.spin_for(REVERSE, target, DEGREES, speed, PERCENT, wait=False)
@@ -124,15 +124,26 @@ def autonomous():
     brain.screen.print("autonomous code")
     turn_for(-30, 80, True)
     drive_for(-0.5, 100, True)
-    spin_toggle(120, True)
-    drive_for(0.2, 50)
-    turn_for(65, 100, True)
+    spin_toggle(130, True)
+    drive_for(0.5, 50)
+    turn_for(69, 100, True)
 
-    raise_lift(80, 20) 
-    drive_for(1.6, 100, True)
-    raise_lift(-40, 20)
-    take(-360, True) #outtake
-
+    raise_lift(100, 50, False) 
+    drive_for(1.9, 80, True)
+    drive_for(-0.1, 50, True)
+    raise_lift(-100, 20, True)
+    wait(0.2, SECONDS)
+    take(-1080, False) #outtake
+    raise_lift(160, 50, True)
+    drive_for(-0.7, 80, False)
+    raise_lift(-160, 30, True)
+    turn_for(-55, 100, True)
+    drive_for(1.5, 100, True)
+    turn_for(30, 100, True)
+    take(1440) #intake
+    drive_for(1, 35, False)
+    
+    
 
 def user_control():
     global motor_power
@@ -209,7 +220,7 @@ def user_control():
 
         #lift
         if lift_power != 0:
-            if left_power < 0:
+            if lift_power < 0:
                 #linearly decelerate when going down to prevent damage
                 lift_power *=0.6
             liftR.spin(FORWARD, lift_power, PERCENT)
