@@ -81,11 +81,25 @@ def toggle_motor_speed():
 #sets 'a' button to toggle the motor speed function
 controller.buttonA.pressed(toggle_motor_speed)
 
-def drive_for(turns, speed reverse=False):
-    frontLeft.spin_for()
-    frontRight.spin_for()
-    backLeft.spin_for()
-    backRight.spin_for()
+def drive_for(turns, speed, reverse=False):
+    target = turns * 2560 #found by using existing gear ratio
+    frontLeft.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
+    frontRight.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
+    backLeft.spin_for(FORWARD, target, DEGREES, speed, PERCENT, wait=False)
+    backRight.spin_for(FORWARD, target, DEGREES, speed, PERCENT wait=False)
+
+# MOTOR_DEG_PER_ROBOT_DEG = (TRACK_WIDTH / WHEEL_DIAMETER) * DEG_PER_WHEEL_REV / 360.0  # 24.0
+motor_degrees = 24
+
+def turn_degrees(angle_deg, speed):
+    target = abs(angle_deg) * motor_degrees
+    left_dir = FORWARD if angle_deg >= 0 else REVERSE
+    right_dir = REVERSE if angle_deg >= 0 else FORWARD
+
+    frontLeft.spin_for(left_dir, target, DEGREES, speed, PERCENT, wait=False)
+    backLeft.spin_for(left_dir, target, DEGREES, speed, PERCENT, wait=False)
+    frontRight.spin_for(right_dir, target, DEGREES, speed, PERCENT, wait=False)
+    backRight.spin_for(right_dir, target, DEGREES, speed, PERCENT, wait=False)
 
 
 #variables to keep track of motor speed multiplier
