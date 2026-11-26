@@ -113,35 +113,45 @@ toggle_motor_speed()
 def spin_toggle(time, pause=False):
     toggle.spin_for(REVERSE, time, DEGREES, 70, PERCENT, wait=pause)
 def raise_lift(units, speed, pause=False):
-    liftL.spin_for(FORWARD, units, DEGREES, speed, PERCENT, wait=pause)
-    liftR.spin_for(FORWARD, units, DEGREES, speed, PERCENT, wait=pause)
-def take(time, pause=False):
-    claw_spinner.spin_for(REVERSE, time, DEGREES, 100, PERCENT, wait=pause)
+    direction = FORWARD if units >= 0 else REVERSE
+    angle = abs(units)
+    liftL.spin_for(direction, angle, DEGREES, speed, PERCENT, wait=False)
+    liftR.spin_for(direction, angle, DEGREES, speed, PERCENT, wait=pause)
+
+def take(degrees, direction=REVERSE, pause=False):
+    claw_spinner.spin_for(direction, abs(degrees), DEGREES, 100, PERCENT, wait=pause)
 
 def autonomous():
     #all functions are non-blocking by default
     brain.screen.clear_screen()
     brain.screen.print("autonomous code")
-    turn_for(-30, 80, True)
+    turn_for(-30, 100) #change to true if it breaks
     drive_for(-0.5, 100, True)
     spin_toggle(130, True)
-    drive_for(0.5, 50)
-    turn_for(69, 100, True)
+    drive_for(0.5, 100)
+    turn_for(67, 100, True)
 
-    raise_lift(100, 50, False) 
-    drive_for(1.9, 80, True)
+    raise_lift(100, 50) 
+    drive_for(1.8, 80, True)
+    raise_lift(-100, 30, False)
     drive_for(-0.1, 50, True)
-    raise_lift(-100, 20, True)
     wait(0.2, SECONDS)
-    take(-1080, False) #outtake
-    raise_lift(160, 50, True)
-    drive_for(-0.7, 80, False)
-    raise_lift(-160, 30, True)
-    turn_for(-55, 100, True)
-    drive_for(1.5, 100, True)
-    turn_for(30, 100, True)
-    take(1440) #intake
-    drive_for(1, 35, False)
+    take(540, FORWARD) #outtake
+    wait(0.3, SECONDS)
+    drive_for(-1.5, 100, True)
+    turn_for(-33.5, 100, True)
+    drive_for(2.4, 100, True)
+    take(3960, REVERSE) #intake
+    drive_for(1.5, 25, False) #2nd pin grab
+    wait(1.5, SECONDS)
+    raise_lift(270, 70, False)
+    turn_for(150, 75, True)
+    drive_for(1.5, 80, True)
+    wait(0.2, SECONDS)
+    raise_lift(-270, 35, True)
+    wait(0.2, SECONDS)
+    take(1080, FORWARD)
+    drive_for(-1, 50, True)
     
     
 
