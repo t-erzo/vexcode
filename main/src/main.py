@@ -125,15 +125,15 @@ def autonomous():
     #all functions are non-blocking by default
     brain.screen.clear_screen()
     brain.screen.print("autonomous code")
-    turn_for(-30, 100) #change to true if it breaks
+    turn_for(-30, 100, True)
     drive_for(-0.5, 100, True)
     spin_toggle(130, True)
     drive_for(0.5, 100)
     turn_for(67, 100, True)
 
-    raise_lift(100, 50) 
+    raise_lift(100, 50, False) 
     drive_for(1.8, 80, True)
-    raise_lift(-100, 30, False)
+    raise_lift(-105, 30, True)
     drive_for(-0.1, 50, True)
     wait(0.2, SECONDS)
     take(540, FORWARD) #outtake
@@ -142,19 +142,26 @@ def autonomous():
     turn_for(-33.5, 100, True)
     drive_for(2.4, 100, True)
     take(3960, REVERSE) #intake
-    drive_for(1.5, 25, False) #2nd pin grab
+    drive_for(1, 20, False) #2nd pin grab
     wait(1.5, SECONDS)
-    raise_lift(270, 70, False)
-    turn_for(150, 75, True)
+    raise_lift(270, 50, True)
+    turn_for(130, 75, True)
     drive_for(1.5, 80, True)
     wait(0.2, SECONDS)
     raise_lift(-270, 35, True)
     wait(0.2, SECONDS)
     take(1080, FORWARD)
-    drive_for(-1, 50, True)
+    drive_for(-4, 50, True)
     
     
+"""
+if inertial sensor =< 67:
+    turn_forever (fast)
+stop motors
+if inertial sensor => 67:
+    turn_forever (slow)
 
+"""
 def user_control():
     global motor_power
     global motor_power_old
